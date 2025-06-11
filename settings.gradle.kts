@@ -18,7 +18,8 @@ val localProperties = Properties()
 if (rootProject.projectDir.resolve("local.properties").exists()) {
     localProperties.load(rootProject.projectDir.resolve("local.properties").inputStream())
 }
-
+val githubToken = localProperties.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+?: throw IllegalStateException("GITHUB_TOKEN not found")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -28,6 +29,10 @@ dependencyResolutionManagement {
         maven {
             name = "drop-core GitHub Packages"
             url = uri("https://maven.pkg.github.com/oluiscabral/drop-core")
+            credentials {
+                username = "token"
+                password = githubToken
+            }
         }
     }
 
