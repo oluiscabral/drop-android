@@ -1,0 +1,14 @@
+# JNILibs
+/app/src/main/jniLibs
+
+# Development Setup
+/build
+/.idea
+/.kotlin
+/.gradle
+/captures
+local.properties
+.cxx
+.DS_Store
+.externalNativeBuild
+
