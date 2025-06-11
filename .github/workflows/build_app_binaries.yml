@@ -2,9 +2,8 @@ name: Build App Binaries
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - releases/v*
 
 jobs:
   build:
