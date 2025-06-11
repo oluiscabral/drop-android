@@ -1,0 +1,37 @@
+name: Build App Binaries
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install JDK
+        uses: actions/setup-java@v4.7.1
+        with:
+          distribution: "temurin"
+          java-version: "22"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set RELEASE_VERSION
+        run: echo RELEASE_VERSION=$(echo $GITHUB_REF_NAME | cut -c11-) >> $GITHUB_ENV
+
+      - name: Build APK splits
+        run: ./gradlew clean assembleRelease
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@4.6.2
+        with:
+          name: apks_${{ env.RELEASE_VERSION }}
+          path: app/build/outputs/apk/release/*.apk
