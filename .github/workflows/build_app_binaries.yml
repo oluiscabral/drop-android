@@ -28,6 +28,9 @@ jobs:
 
       - name: Build APK splits
         run: ./gradlew clean assembleRelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
 
       - name: Upload APKs
         uses: actions/upload-artifact@4.6.2
