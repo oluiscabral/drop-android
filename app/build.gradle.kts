@@ -8,12 +8,21 @@ android {
     namespace = "dev.arkbuilders.drop.app"
     compileSdk = 36
 
+    signingConfigs {
+        create("release") {
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            storeFile = file(System.getenv("KEYSTORE_PATH"))
+        }
+    }
+
     defaultConfig {
         applicationId = "dev.arkbuilders.drop.app"
-        minSdk = 33
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = System.getenv("RELEASE_VERSION") ?: "dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -21,6 +30,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -38,6 +48,11 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    packaging {
+        jniLibs.excludes.add("META-INF/AL2.0")
+        jniLibs.excludes.add("META-INF/LGPL2.1")
     }
 }
 
@@ -62,7 +77,7 @@ dependencies {
         }
     }
     //noinspection Aligned16KB
-    implementation("dev.arkbuilders:drop:1.1.0") {
+    implementation("dev.arkbuilders:drop:1.1.4") {
         artifact {
             extension = "aar"
             type = "aar"

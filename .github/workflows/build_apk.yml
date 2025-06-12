@@ -1,0 +1,51 @@
+name: Build APK
+
+on:
+  push:
+    branches:
+      - releases/v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set RELEASE_VERSION
+        run: echo RELEASE_VERSION=$(echo $GITHUB_REF_NAME | cut -c11-) >> $GITHUB_ENV
+
+      - name: Install JDK
+        uses: actions/setup-java@v4.7.1
+        with:
+          distribution: "temurin"
+          java-version: "22"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Decode keystore
+        run: |
+          echo -n "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '\r\n' | base64 -d > keystore.jks
+
+      - name: Build signed APK
+        run: ./gradlew assembleRelease
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PATH: ../keystore.jks
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@4.6.2
+        with:
+          name: apks_${{ env.RELEASE_VERSION }}
+          path: app/build/outputs/apk/release/*.apk
