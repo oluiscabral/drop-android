@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.arkbuilders.drop.app"
-        minSdk = 33
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = System.getenv("RELEASE_VERSION") ?: "dev"
@@ -77,7 +77,7 @@ dependencies {
         }
     }
     //noinspection Aligned16KB
-    implementation("dev.arkbuilders:drop:1.1.3") {
+    implementation("dev.arkbuilders:drop:1.1.4") {
         artifact {
             extension = "aar"
             type = "aar"
