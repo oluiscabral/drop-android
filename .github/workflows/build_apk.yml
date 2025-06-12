@@ -32,7 +32,7 @@ jobs:
 
       - name: Decode keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '\r\n' | base64 -d > keystore.jks
+          echo -n "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '\r\n' | base64 -d > keystore.jks
 
       - name: Build signed APK
         run: ./gradlew assembleRelease
