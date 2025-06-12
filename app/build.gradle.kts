@@ -8,6 +8,15 @@ android {
     namespace = "dev.arkbuilders.drop.app"
     compileSdk = 36
 
+    signingConfigs {
+        create("release") {
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            storeFile = file(System.getenv("KEYSTORE_PATH"))
+        }
+    }
+
     defaultConfig {
         applicationId = "dev.arkbuilders.drop.app"
         minSdk = 33
@@ -21,6 +30,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
