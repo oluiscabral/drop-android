@@ -39,6 +39,11 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        jniLibs.excludes.add("META-INF/AL2.0")
+        jniLibs.excludes.add("META-INF/LGPL2.1")
+    }
 }
 
 dependencies {
@@ -62,7 +67,7 @@ dependencies {
         }
     }
     //noinspection Aligned16KB
-    implementation("dev.arkbuilders:drop:1.1.1") {
+    implementation("dev.arkbuilders:drop:1.1.3") {
         artifact {
             extension = "aar"
             type = "aar"
